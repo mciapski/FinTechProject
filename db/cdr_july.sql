@@ -1,0 +1,14 @@
+DROP SCHEMA IF EXISTS cdr_july;
+CREATE SCHEMA cdr_july;
+USE cdr_july;
+
+CREATE TABLE cdr (
+Date_stock DATETIME NOT NULL,
+Opening DOUBLE NOT NULL,
+Highest DOUBLE NOT NULL,cdr
+Lowest DOUBLE NOT NULL,
+Closing DOUBLE NOT NULL,
+Volume LONG NOT NULL
+);
+ALTER TABLE cdr
+MODIFY COLUMN Date_stock DATE
