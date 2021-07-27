@@ -1,6 +1,10 @@
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.logging.SimpleFormatter;
 
@@ -9,13 +13,16 @@ import java.util.logging.SimpleFormatter;
 public class Company {
 
   @Id
-  private Date Date_stock;
+  private LocalDate Date_stock;
   private double opening;
   private double lowest;
   private double closing;
   private double volume;
 
-  public Company(Date date_stock, double opening, double lowest, double closing, double volume) {
+
+
+  public Company(LocalDate date_stock, double opening, double lowest, double closing, double volume) {
+
     Date_stock = date_stock;
     this.opening = opening;
     this.lowest = lowest;
@@ -26,7 +33,7 @@ public class Company {
   public Company() {
   }
 
-  public Date getDate_stock() {
+  public LocalDate getDate_stock() {
     return Date_stock;
   }
 
