@@ -1,5 +1,8 @@
+package Companies;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -9,11 +12,11 @@ import java.util.Date;
 import java.util.logging.SimpleFormatter;
 
 @Entity
-@Table(name="cdr")
-public class Company {
+@Table(name="ing")
+public class ING{
 
   @Id
-  private LocalDate Date_stock;
+  private Date Date_stock;
   private double opening;
   private double lowest;
   private double closing;
@@ -21,7 +24,7 @@ public class Company {
 
 
 
-  public Company(LocalDate date_stock, double opening, double lowest, double closing, double volume) {
+  public ING(Date date_stock, double opening, double lowest, double closing, double volume) {
 
     Date_stock = date_stock;
     this.opening = opening;
@@ -30,10 +33,10 @@ public class Company {
     this.volume = volume;
   }
 
-  public Company() {
+  public ING() {
   }
 
-  public LocalDate getDate_stock() {
+  public Date getDate_stock() {
     return Date_stock;
   }
 
