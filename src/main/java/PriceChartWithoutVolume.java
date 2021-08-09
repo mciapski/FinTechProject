@@ -1,4 +1,4 @@
-import Companies.ING;
+import Companies.Choice;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -14,13 +14,26 @@ import org.jfree.ui.RefineryUtilities;
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 
 public class PriceChartWithoutVolume extends JFrame {
-  public PriceChartWithoutVolume(String applicationTitle, String title) {
+
+  private Choice choice;
+
+  public PriceChartWithoutVolume(String applicationTitle, String title, Choice choice) {
     super(title);
-    XYDataset dataset = createDataset();
+    XYDataset dataset;
+    switch (choice) {
+      case ING:
+        dataset = createDatasetING();
+        break;
+      case CDProject:
+        dataset = createDatasetCD();
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + choice);
+    }
+    this.choice = choice;
     JFreeChart chart = createChart(dataset);
     ChartPanel chartPanel = new ChartPanel(chart, false);
     chartPanel.setPreferredSize(new Dimension(500, 270));
@@ -28,6 +41,14 @@ public class PriceChartWithoutVolume extends JFrame {
     chartPanel.setMouseZoomable(true);
 
     setContentPane(chartPanel);
+  }
+
+  public Choice getChoice() {
+    return choice;
+  }
+
+  public void setChoice(Choice choice) {
+    this.choice = choice;
   }
 
   /**
@@ -38,7 +59,7 @@ public class PriceChartWithoutVolume extends JFrame {
    */
   private static JFreeChart createChart(XYDataset dataset) {
     JFreeChart chart = ChartFactory.createTimeSeriesChart(
-        "ING Stock Prices",
+        "Stock Prices",
         "Date",
         "Closing price",
         dataset,
@@ -74,11 +95,11 @@ public class PriceChartWithoutVolume extends JFrame {
    *
    * @return the dataset.
    */
-  private XYDataset createDataset() {
-    TimeSeries s1 = new TimeSeries("ING share prices for July");
+  private XYDataset createDatasetING() {
+    TimeSeries s1 = new TimeSeries("ING historical share prices");
     GetDataFromH getDataFromH = new GetDataFromH();
-    for (int i = 0; i < getDataFromH.storingList.size(); i++) {
-      s1.add(new Day((Date) getDataFromH.storingDateList.get(i)),
+    for (int i = 0; i < getDataFromH.storingINGList.size(); i++) {
+      s1.add(new Day((Date) getDataFromH.storingINGDateList.get(i)),
           (Double) getDataFromH.IngPricesListToChart().get(i));
     }
     TimeSeriesCollection dataset = new TimeSeriesCollection();
@@ -86,11 +107,22 @@ public class PriceChartWithoutVolume extends JFrame {
     return dataset;
   }
 
-  public void showChart() {
-    PriceChartWithoutVolume chartOne = new PriceChartWithoutVolume(
-        "Prices for month: July", "ING");
-    chartOne.pack();
-    RefineryUtilities.centerFrameOnScreen(chartOne);
-    chartOne.setVisible(true);
+  private XYDataset createDatasetCD() {
+    TimeSeries s2 = new TimeSeries("CDProject historical share prices");
+    GetDataFromH getDataFromHCD = new GetDataFromH();
+    for (int i = 0; i < getDataFromHCD.storingCDList.size(); i++) {
+      s2.add(new Day((Date) getDataFromHCD.storingCDDateList.get(i)),
+          (Double) getDataFromHCD.CDPricesListToChart().get(i));
+    }
+    TimeSeriesCollection dataset = new TimeSeriesCollection();
+    dataset.addSeries(s2);
+    return dataset;
+  }
+
+  public void showChart(PriceChartWithoutVolume priceChartWithoutVolume) {
+
+    priceChartWithoutVolume.pack();
+    RefineryUtilities.centerFrameOnScreen(priceChartWithoutVolume);
+    priceChartWithoutVolume.setVisible(true);
   }
 }

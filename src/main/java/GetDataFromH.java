@@ -1,20 +1,22 @@
 import Companies.CD;
+import Companies.Choice;
 import Companies.ING;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GetDataFromH<T> {
-List<ING> storingList = getAllPrices_ING();
-List<Date> storingDateList = IngDatesListToChart();
+  List<ING> storingINGList = getAllPrices_ING();
+  List<Date> storingINGDateList = IngDatesListToChart();
+  List<CD> storingCDList = getAllPrices_CD();
+  List<Date> storingCDDateList = CDDatesListToChart();
+
+
   public List getAllPrices_CD() {
     final EntityManagerFactory emf = Persistence.createEntityManagerFactory("cdr_julyPU");
     final EntityManager em = emf.createEntityManager();
@@ -23,10 +25,10 @@ List<Date> storingDateList = IngDatesListToChart();
           "FROM CD", CD.class);
       List<CD> CDresultList = CD.getResultList();
       return CDresultList;
-      } finally {
-        emf.close();
-      }
+    } finally {
+      emf.close();
     }
+  }
 
   public void showData_CD(List<CD> list) {
     StringBuilder sb = new StringBuilder();
@@ -38,6 +40,16 @@ List<Date> storingDateList = IngDatesListToChart();
           .append(element.getVolume()).append("\n");
     }
     System.out.println(sb);
+  }
+
+  public List<Double> CDPricesListToChart() {
+    List<Double> priceIngList = storingCDList.stream().map(CD::getClosing).collect(Collectors.toList());
+    return priceIngList;
+  }
+
+  public List<Date> CDDatesListToChart() {
+    List<Date> dateCDList = storingCDList.stream().map(CD::getDate_stock).collect(Collectors.toList());
+    return dateCDList;
   }
 
   public List<ING> getAllPrices_ING() {
@@ -54,12 +66,13 @@ List<Date> storingDateList = IngDatesListToChart();
     }
   }
 
-  public List<Double> IngPricesListToChart(){
-    List<Double> priceIngList = storingList.stream().map(ING::getClosing).collect(Collectors.toList());
+  public List<Double> IngPricesListToChart() {
+    List<Double> priceIngList = storingINGList.stream().map(ING::getClosing).collect(Collectors.toList());
     return priceIngList;
   }
-  public List<Date> IngDatesListToChart(){
-    List<Date> priceIngList = storingList.stream().map(ING::getDate_stock).collect(Collectors.toList());
+
+  public List<Date> IngDatesListToChart() {
+    List<Date> priceIngList = storingINGList.stream().map(ING::getDate_stock).collect(Collectors.toList());
     return priceIngList;
   }
 
